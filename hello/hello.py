@@ -1,1 +1,6 @@
 print("hello world")
+print("e")
+print("d")
+print("de")
+print("dwer")
+print("dadafdf")
