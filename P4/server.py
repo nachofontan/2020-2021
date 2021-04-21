@@ -6,7 +6,7 @@ from urllib.parse import urlparse, parse_qs
 # -- Server network parameters
 IP = "127.0.0.1"
 PORT = 12000
-HTML_ASSETS = "./html/"
+HTML_FOLDER = "./html/"
 
 
 def read_html_file(filename):
@@ -40,24 +40,24 @@ def process_client(s):
     # blank line
     # Body (content to send)
 
-    # This new contents are written in HTML language
+    # This new contents are written in HTML_FOLDER language
     # -- Status line: We respond that everything is ok (200 code)
     status_line = "HTTP/1.1 200 OK\n"
 
     # -- Add the Content-Type header
     header = "Content-Type: text/html\n"
     if path_name == "/":
-        body = read_html_file(HTML_ASSETS + "INDEX.html")
+        body = read_html_file(HTML_FOLDER + "INDEX.html")
     elif path_name == "/info/A":
-        body = read_html_file(HTML_ASSETS + "A.html")
+        body = read_html_file(HTML_FOLDER + "A.html")
     elif path_name == "/info/C":
-        body = read_html_file(HTML_ASSETS + "C.html")
+        body = read_html_file(HTML_FOLDER + "C.html")
     elif path_name == "/info/G":
-        body = read_html_file(HTML_ASSETS + "G.html")
+        body = read_html_file(HTML_FOLDER + "G.html")
     elif path_name == "/info/T":
-        body = read_html_file(HTML_ASSETS + "T.html")
+        body = read_html_file(HTML_FOLDER + "T.html")
     else:
-        body = read_html_file(HTML_ASSETS + "ERROR.html")
+        body = read_html_file(HTML_FOLDER + "ERROR.html")
 
     # -- Add the Content-Length
     header += f"Content-Length: {len(body)}\n"
