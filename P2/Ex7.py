@@ -1,6 +1,6 @@
 from client0 import Client
 from pathlib import Path
-from P1.Seq02 import Seq
+from Seq02 import Seq
 
 PRACTICE = 2
 EXERCISE = 1
@@ -17,8 +17,8 @@ s = Seq()
 s.read_fasta('../P0/FRAT.txt')
 i = 0
 count = 0
-while i < len(s.str_bases) and count < 10:
-    fragment = s.str_bases[i:i+10]
+while i < len(s.strbases) and count < 10:
+    fragment = s.strbases[i:i+10]
     count += 1
     i += 10
     fragment_text = "Fragment "+ str(count) + ": " + fragment

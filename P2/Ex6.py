@@ -1,6 +1,6 @@
 from client0 import Client
 from pathlib import Path
-from P1.Seq02 import Seq
+from Seq02 import Seq
 
 
 
@@ -15,6 +15,14 @@ PORT = 12000
 
 # -- Create a client object
 c = Client(IP, PORT)
-s = Seq
-s.read_fasta('.../SEQUENCES/FRAT.txt')
-print(s.strbases)
+s = Seq()
+s.read_fasta("FRAT.txt")
+count = 0
+for i in range (0, len(s.strbases), 10 ):
+    fragment = s.strbases[i:i + 10]
+    print(fragment)
+    count = count + 1
+    if count == 5:
+        break
+    print("Fragment", count, ":", fragment)
+    print(c.talk(fragment))
