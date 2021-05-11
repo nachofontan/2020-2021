@@ -1,111 +1,89 @@
-import Seq02
+import socket
+import server_utils
 
-def print_colored(message, color):
-    import termcolor
-    import colorama
-    colorama.init(strip="False")
-    print("To server: ", end="")
-    print(termcolor.colored(message, color))
+list_sequences = ["ATTCCGTGTCACT", "AAAAAAATTTTCGGCTAT", "AACCTCGCTAGCTAGCTAG",
+                  "ATCTATCGCCCTTTTTTTTAA", "AAACCCAGGGTT"]
+# -- Step 1: create the socket
+ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-def format_command(command):
-    return command.replace("\n", "").replace("\r", "")
+# -- Optional: This is for avoiding the problem of Port already in use
+ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-def ping():
-    print_colored("PING, command!", "green")
+# Configure the Server's IP and PORT
+PORT = 8080
+IP = "127.0.0.1"
 
-def get(cs, list_sequences, argument):
-    print_colored("GET", "green")
-    response = list_sequences[int(argument)]
-    print("GET " + str(argument) + ": " + response)
-    cs.send(response.encode())
+# -- Step 1: create the socket
+ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-def info(cs, list_sequences, argument):
-    print_colored("INFO", "green")
-    seq = Seq02.Seq(list_sequences[int(argument)])
-    print(seq)
-    number_dict = seq.count()
-    percentage_dict = seq.count_percentage()
-    response = "Sequence: " + list_sequences[int(argument)] + "\nTotal length: " + str(seq.len()) + "\n"
-    for key in number_dict:
-        response += (str(key) + ": " + str(number_dict[key]) + " (" + str(round(percentage_dict[key], 1)) + "%)\n")
-    print(response)
-    cs.send(response.encode())
+# -- Optional: This is for avoiding the problem of Port already in use
+ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-def comp(cs, list_sequences, argument):
-    print_colored("COMP", "green")
-    seq = Seq02.Seq(list_sequences[int(argument)])
-    response = seq.complement()
-    response = "COMP " + str(seq) + "\n" + response
-    print(response)
-    cs.send(response.encode())
+# -- Step 2: Bind the socket to server's IP and PORT
+ls.bind((IP, PORT))
 
-def rev(cs, list_sequences, argument):
-    print_colored("REV", "green")
-    seq = Seq02.Seq(list_sequences[int(argument)])
-    response = seq.reverse()
-    response = "REV " + str(seq) + "\n" + response
-    print(response)
-    cs.send(response.encode())
+# -- Step 3: Configure the socket for listening
+ls.listen()
 
-def gene(cs, argument):
-    GENE_FOLDER = "./SEQUENCES/"
-    print_colored("GENE", "green")
-    seq = Seq02.Seq()
-    response = seq.seq_read_fasta(GENE_FOLDER + argument + ".txt")
-    print(response)
-    cs.send(response.encode())
+print("The server is configured!")
+count_connections = 0
+client_adress_list = []
 
-def print_colored(message, color):
-    import termcolor
-    import colorama
-    colorama.init(strip="False")
-    print("To server: ", end="")
-    print(termcolor.colored(message, color))
+while True:
+    # -- Waits for a client to connect
+    print("\nWaiting for Clients to connect")
+    try:
+        (cs, client_ip_port) = ls.accept()
+        count_connections += 1
+        client_adress_list.append(client_ip_port)
 
-def format_command(command):
-    return command.replace("\n", "").replace("\r", "")
+    # -- Server stopped manually
+    except KeyboardInterrupt:
+        print("Server stopped by the user")
 
-def ping():
-    print_colored("PING, command!", "green")
+        # -- Close the listenning socket
+        ls.close()
 
-def get(cs, list_sequences, argument):
-    print_colored("GET", "green")
-    response = list_sequences[int(argument)]
-    print("GET " + str(argument) + ": " + response)
-    cs.send(response.encode())
+        # -- Exit!
+        exit()
+    print("A client has connected to the server!")
 
-def info(cs, list_sequences, argument):
-    print_colored("INFO", "green")
-    seq = Seq02.Seq(list_sequences[int(argument)])
-    print(seq)
-    number_dict = seq.count()
-    percentage_dict = seq.count_percentage()
-    response = "Sequence: " + list_sequences[int(argument)] + "\nTotal length: " + str(seq.len()) + "\n"
-    for key in number_dict:
-        response += (str(key) + ": " + str(number_dict[key]) + " (" + str(round(percentage_dict[key], 1)) + "%)\n")
-    print(response)
-    cs.send(response.encode())
+    # -- Read the message from the client
+    # -- The received message is in raw bytes
+    msg_raw = cs.recv(2048)
 
-def comp(cs, list_sequences, argument):
-    print_colored("COMP", "green")
-    seq = Seq02.Seq(list_sequences[int(argument)])
-    response = seq.complement()
-    response = "COMP " + str(seq) + "\n" + response
-    print(response)
-    cs.send(response.encode())
+    # -- We decode it for converting it
+    # -- into a human-redeable string
+    msg = msg_raw.decode()
 
-def rev(cs, list_sequences, argument):
-    print_colored("REV", "green")
-    seq = Seq02.Seq(list_sequences[int(argument)])
-    response = seq.reverse()
-    response = "REV " + str(seq) + "\n" + response
-    print(response)
-    cs.send(response.encode())
+    formatted_message = server_utils.format_command(msg)
+    formatted_message = formatted_message.split(" ")
+    if len(formatted_message) == 1:
+        command = formatted_message[0]
+    else:
+        command = formatted_message[0]
+        argument = formatted_message[1]
+    if command == "PING":
+        server_utils.ping()
+        # -- Send a response message to the client
+        response = "OK!"
+        # -- The message has to be encoded into bytes
+        cs.send(str(response).encode())
+    elif command == "GET":
+        server_utils.get(cs, list_sequences, argument)
+    elif command == "INFO":
+        server_utils.info(cs, list_sequences, argument)
+    elif command == "COMP":
+        server_utils.comp(cs, list_sequences, argument)
+    elif command == "REV":
+        server_utils.rev(cs, list_sequences, argument)
+    elif command == "GENE":
+        server_utils.gene(cs, argument)
 
-def gene(cs, argument):
-    GENE_FOLDER = "./SEQUENCES/"
-    print_colored("GENE", "green")
-    seq = Seq02.Seq()
-    response = seq.seq_read_fasta(GENE_FOLDER + argument + ".txt")
-    print(response)
-    cs.send(response.encode())
+    else:
+        response = "Not available command"
+        cs.send(str(response).encode())
+
+    # -- Close the data socket
+    cs.close()
+
