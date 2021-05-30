@@ -4,7 +4,7 @@ import termcolor
 import pathlib
 import jinja2
 from urllib.parse import urlparse, parse_qs
-import server_utils as su
+
 
 def read_html_file(filename):
     content = pathlib.Path(filename).read_text()
@@ -12,7 +12,7 @@ def read_html_file(filename):
 
 
 # Define the Server's port
-PORT = 8080
+PORT = 12000
 
 LIST_SEQUENCES = ["AATTCCGG", "ATACGATAGCA", "ATAGACACACATGAT", "AACACACAGAGATTAGA", "ACAGATGA"]
 
@@ -60,22 +60,22 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # It is a happy server: It always returns a message saying
         # that everything is ok
         o = urlparse(self.path)
-        path.name = o.path
+        path_name = o.path
         arguments = parse_qs(o.query)
-        print ("Resource requested:", path_name)
-        print ("Parameters:", arguments)
+        print("Resource requested:", path_name)
+        print("Parameters:", arguments)
 
         context = {}
 
         if path_name == "/":
             context["n_sequences"] = len(LIST_SEQUENCES)
             contents = read_html_file("./html/index.html").render(context=context)
-        elif path_name == "/test":
+        elif self.path == "/test":
             contents = read_html_file("./html/test.html").render()
         elif path_name == "/ping":
             contents = read_html_file("./html/ping.html").render()
         elif path_name == "/get":
-            contents = server_utils.get(cs, n, SEQUENCES_LIST)
+            contents = su.get(cs, n, SEQUENCES_LIST)
         else:
             contents = read_html_file("./html/error.html").render()
 

@@ -45,7 +45,11 @@ class Seq:
         dictionary = dict(zip(bases, count_bases))
         return dictionary
 
-    @staticmethod
+    def count_porcentage(self):
+        a, c, g, t = self.count_bases()
+        total = a + c + g + t
+        return {"A": (a/total)*100, "C": (c/total)*100, "G": (g/total)*100, "T": (t/total)*100}
+
     def reverse(self):
         rev_seq = ''
         if self.strbases == Seq.NULL:
