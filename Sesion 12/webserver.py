@@ -1,17 +1,11 @@
 import socket
 import termcolor
-import pathlib
-from urllib.parse import urlparse, parse_qs
+
 
 # -- Server network parameters
 IP = "127.0.0.1"
-PORT = 12000
-HTML_FOLDER = "./HTML_FOLDER/"
+PORT = 8080
 
-
-def read_html_file(filename):
-    content = pathlib.Path(filename).read_text()
-    return content
 
 def process_client(s):
     # -- Receive the request message
@@ -25,12 +19,8 @@ def process_client(s):
 
     # -- The request line is the first
     req_line = lines[0]
-    request = req_line.split(' ')[1]
-    o = urlparse(request)
-    path_name = o.path
-    arguments = parse_qs(o.query)
-    print("Parameters", arguments)
-    print("Resource requested: ", path_name)
+
+    print("Request line: ", end="")
     termcolor.cprint(req_line, "green")
 
     # -- Generate the response message
@@ -40,24 +30,14 @@ def process_client(s):
     # blank line
     # Body (content to send)
 
-    # This new contents are written in HTML_FOLDER language
+    # -- Let's start with the body
+    body = "Hello from my first web server!\n"
+
     # -- Status line: We respond that everything is ok (200 code)
     status_line = "HTTP/1.1 200 OK\n"
 
     # -- Add the Content-Type header
-    header = "Content-Type: text/html\n"
-    if path_name == "/":
-        body = read_html_file(HTML_FOLDER + "INDEX.html")
-    elif path_name == "/info/A":
-        body = read_html_file(HTML_FOLDER + "A.html")
-    elif path_name == "/info/C":
-        body = read_html_file(HTML_FOLDER + "C.html")
-    elif path_name == "/info/G":
-        body = read_html_file(HTML_FOLDER + "G.html")
-    elif path_name == "/info/T":
-        body = read_html_file(HTML_FOLDER + "T.html")
-    else:
-        body = read_html_file(HTML_FOLDER + "ERROR.html")
+    header = "Content-Type: text/plain\n"
 
     # -- Add the Content-Length
     header += f"Content-Length: {len(body)}\n"

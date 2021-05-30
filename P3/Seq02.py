@@ -60,7 +60,7 @@ class Seq:
                     rev_seq += e
         return rev_seq
 
-    @staticmethod
+
     def complement(self):
         comp_seq = ""
         if self.strbases == Seq.NULL:
