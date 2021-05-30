@@ -3,45 +3,43 @@ import socketserver
 import termcolor
 import pathlib
 import jinja2
-from urllib.parse import urlparse, parse_qs
 
 
 def read_html_file(filename):
     content = pathlib.Path(filename).read_text()
     return content
 
-
+def read_template_html_file(filename):
+    content = jinja2.Template(pathlib.Path(filename).read_text())
+    return content
 # Define the Server's port
 PORT = 12000
-
-LIST_SEQUENCES = ["AATTCCGG", "ATACGATAGCA", "ATAGACACACATGAT", "AACACACAGAGATTAGA", "ACAGATGA"]
-
 
 BASES_INFORMATION = {
     "A": {"link": "https://en.wikipedia.org/wiki/Adenine",
           "formula": "C5H5N5",
           "name": "ADENINE",
-          "colour" : "green",
+          "colour": "green"
     },
     "C": {"link": "https://en.wikipedia.org/wiki/Cytosine",
           "formula": "C4H5N3O",
           "name": "CYTOSINE",
-          "colour" : "yellow",
+          "colour": "yellow"
           },
     "G": {"link": "https://en.wikipedia.org/wiki/Guanine",
           "formula": "C5H5N5O",
           "name": "GUANINE",
-          "colour" : "lightskyblue",
+          "colour": "lightskyblue"
           },
     "T": {"link": "https://en.wikipedia.org/wiki/Thymine",
           "formula": "C5H6N2O2",
           "name": "THYMINE",
-          "colour" : "pink",
+          "colour": "pink"
           }
 }
+
 # -- This is for preventing the error: "Port already in use"
 socketserver.TCPServer.allow_reuse_address = True
-
 
 
 # Class with our Handler. It is a called derived from BaseHTTPRequestHandler
@@ -59,25 +57,29 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # We are NOT processing the client's request
         # It is a happy server: It always returns a message saying
         # that everything is ok
-        o = urlparse(self.path)
-        path_name = o.path
-        arguments = parse_qs(o.query)
-        print("Resource requested:", path_name)
-        print("Parameters:", arguments)
 
-        context = {}
-
-        if path_name == "/":
-            context["n_sequences"] = len(LIST_SEQUENCES)
-            contents = read_html_file("./html/index.html").render(context=context)
-        elif self.path == "/test":
-            contents = read_html_file("./html/test.html").render()
-        elif path_name == "/ping":
-            contents = read_html_file("./html/ping.html").render()
-        elif path_name == "/get":
-            contents = su.get(cs, n, SEQUENCES_LIST)
+        # Message to send back to the clinet
+        if self.path == "/":
+            contents = read_html_file("./html/index.html")
+        elif "/info/" in self.path:
+            base = self.path.split("/")[-1]
+            try:
+                context = BASES_INFORMATION[base]
+                context["letter"] = base
+                contents = read_template_html_file("./html/info/general.html").render(base_information=context)
+            except KeyError:
+                if self.path.endswith(".html"):
+                    try:
+                        contents = read_html_file("./html" + self.path)
+                    except FileNotFoundError:
+                        contents = read_html_file("./html/error.html")
+        elif self.path.endswith(".html"):
+            try:
+                contents = read_html_file("./html" + self.path)
+            except FileNotFoundError:
+                contents = read_html_file("./html/error.html")
         else:
-            contents = read_html_file("./html/error.html").render()
+            contents = read_html_file("./html/error.html")
 
         # Generating the response message
         self.send_response(200)  # -- Status line: OK!
