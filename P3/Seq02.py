@@ -34,21 +34,40 @@ class Seq:
         else:
             return len(self.strbases)
 
-    def count_base(self, base):
-        return self.strbases.count(base)
+
+    def count_bases(self):
+        a, c, g, t = 0, 0, 0, 0
+        if not (self.strbases == Seq.NULL) and not (self.strbases == Seq.INVALID):
+            for ch in self.strbases:
+                if ch == "A":
+                    a += 1
+                elif ch == "T":
+                    t += 1
+                elif ch == "G":
+                    g += 1
+                elif ch == "C":
+                    c += 1
+        return a, c, g, t
 
     def count(self):
         bases = ["A", "C", "T", "G"]
         count_bases = []
         for base in bases:
-            count_bases.append(self.count_base(base))
+            count_bases.append(self.count_bases())
         dictionary = dict(zip(bases, count_bases))
         return dictionary
 
-    def count_percentage(self):
-        a, c, g, t = self.count_base()
-        total = a + c + g + t
-        return {"A": (a/total)*100, "C": (c/total)*100, "G": (g/total)*100, "T": (t/total)*100}
+    #def percentage(self):
+        #a, c, g, t = self.count()
+        #total = a + c + g + t
+        #return {"A": (a/total)*100, "C": (c/total)*100, "G": (g/total)*100, "T": (t/total)*100}
+
+    def percentage(self, count_bases, seq_len):
+        a = str(round(count_bases[0] / seq_len * 100, 2)) + "%"
+        c = str(round(count_bases[1] / seq_len * 100, 2)) + "%"
+        g = str(round(count_bases[2] / seq_len * 100, 2)) + "%"
+        t = str(round(count_bases[3] / seq_len * 100, 2)) + "%"
+        return {"A": a , "C": c , "G": g, "T": t}
 
     def reverse(self):
         rev_seq = ''
@@ -90,3 +109,21 @@ class Seq:
         body = (file_lines[1:])
         self.strbases = ''.join(body)
         return self
+
+    def frequency(self):
+        a, c, g, t = 0, 0, 0, 0
+        for e in self.strbases:
+            if e == "A":
+                a += 1
+            elif e == "C":
+                c += 1
+            elif e == "G":
+                g += 1
+            elif e == "T":
+                t += 1
+        new_dict = {"A": a, "C": c, "G": g, "T": t}
+        number_most_frequent = max(new_dict.values())
+        for k, v in new_dict.items():
+            if v == number_most_frequent:
+                most_frequent_base = k
+        return most_frequent_base

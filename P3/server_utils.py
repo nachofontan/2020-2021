@@ -1,4 +1,4 @@
-import Seq02
+from Seq02 import Seq
 
 def print_colored(message, color):
     import termcolor
@@ -21,19 +21,20 @@ def get(cs, list_sequences, argument):
 
 def info(cs, list_sequences, argument):
     print_colored("INFO", "green")
-    seq = Seq02.Seq(list_sequences[int(argument)])
+    seq = Seq(list_sequences[int(argument)])
     print(seq)
     number_dict = seq.count()
-    percentage_dict = seq.count_percentage()
-    response = "Sequence: " + list_sequences[int(argument)] + "\nTotal length: " + str(seq.len()) + "\n"
+    len1 = len(str(seq))
+    percentage_dict = seq.percentage(seq.count_bases() , len1)
+    response = "Sequence: " + list_sequences[int(argument)] + "\nTotal length: " + str(len1) + "\n"
     for key in number_dict:
-        response += (str(key) + ": " + str(number_dict[key]) + " (" + str(round(percentage_dict[key], 1)) + "%)\n")
+        response += (str(key) + ": " + str(number_dict[key]) + " (" + str(percentage_dict[key], ) + "%)\n")
     print(response)
     cs.send(response.encode())
 
 def comp(cs, list_sequences, argument):
     print_colored("COMP", "green")
-    seq = Seq02.Seq(list_sequences[int(argument)])
+    seq = Seq(list_sequences[int(argument)])
     response = seq.complement()
     response = "COMP " + str(seq) + "\n" + response
     print(response)
@@ -41,8 +42,8 @@ def comp(cs, list_sequences, argument):
 
 def rev(cs, list_sequences, argument):
     print_colored("REV", "green")
-    seq = Seq02.Seq(list_sequences[int(argument)])
-    response = seq.reverse("self")
+    seq = Seq(list_sequences[int(argument)])
+    response = seq.reverse()
     response = "REV " + str(seq) + "\n" + response
     print(response)
     cs.send(response.encode())
@@ -50,8 +51,8 @@ def rev(cs, list_sequences, argument):
 def gene(cs, argument):
     GENE_FOLDER = "./SEQUENCES/"
     print_colored("GENE", "green")
-    seq = Seq02.Seq()
-    response = seq.seq_read_fasta(GENE_FOLDER + argument + ".txt")
+    seq = Seq()
+    response = seq.read_fasta(GENE_FOLDER + argument + ".txt")
     print(response)
-    cs.send(response.encode())
+    cs.send(str(response).encode())
 
