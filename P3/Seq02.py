@@ -45,8 +45,8 @@ class Seq:
         dictionary = dict(zip(bases, count_bases))
         return dictionary
 
-    def count_porcentage(self):
-        a, c, g, t = self.count_bases()
+    def count_percentage(self):
+        a, c, g, t = self.count_base()
         total = a + c + g + t
         return {"A": (a/total)*100, "C": (c/total)*100, "G": (g/total)*100, "T": (t/total)*100}
 
