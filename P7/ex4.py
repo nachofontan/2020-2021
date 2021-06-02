@@ -1,7 +1,7 @@
 
 import http.client
 import json
-import Seq02
+from Seq02 import Seq
 
 
 def print_colored(message, data, color):
@@ -35,15 +35,17 @@ try:
     if response.status == 200:
         response_dict = json.loads(response.read().decode())
         #print(json.dumps(response_dict, indent=4, sort_keys=True))
-        sequence = Seq02.Seq(response_dict["seq"])
+        sequence = Seq(response_dict["seq"])
         s_length = sequence.len()
-        percentages = sequence.percentage_base_and_count()
-        most_frequent_base = sequence.frequency_base()
+        a, c, g, t = sequence.percentage(sequence.count_bases(), s_length)
+        most_frequent_base = sequence.frequent_base(sequence.count())
         print_colored("Gene: ", user_gene, "yellow")
         print_colored("Total length: ", s_length, "yellow")
-        for key, value in percentages.items():
-            print_colored(key, value, "blue")
-        print_colored("Most frequent base: ", most_frequent_base, "yellow")
+        print(a)
+        print(c)
+        print(t)
+        print(g)
+        print(most_frequent_base)
 except KeyError:
     print("The gene is not inside our dictionary. Choose one of the following: ", list(genes_dict.keys()))
 

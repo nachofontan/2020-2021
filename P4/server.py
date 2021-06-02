@@ -45,19 +45,19 @@ def process_client(s):
     status_line = "HTTP/1.1 200 OK\n"
 
     # -- Add the Content-Type header
-    header = "Content-Type: text/html\n"
+    header = "Content-Type: text/HTML\n"
     if path_name == "/":
-        body = read_html_file(HTML_FOLDER + "INDEX.html")
+        body = read_html_file(HTML_FOLDER + "INDEX.HTML")
     elif path_name == "/info/A":
-        body = read_html_file(HTML_FOLDER + "A.html")
+        body = read_html_file(HTML_FOLDER + "A.HTML")
     elif path_name == "/info/C":
-        body = read_html_file(HTML_FOLDER + "C.html")
+        body = read_html_file(HTML_FOLDER + "C.HTML")
     elif path_name == "/info/G":
-        body = read_html_file(HTML_FOLDER + "G.html")
+        body = read_html_file(HTML_FOLDER + "G.HTML")
     elif path_name == "/info/T":
-        body = read_html_file(HTML_FOLDER + "T.html")
+        body = read_html_file(HTML_FOLDER + "T.HTML")
     else:
-        body = read_html_file(HTML_FOLDER + "ERROR.html")
+        body = read_html_file(HTML_FOLDER + "ERROR.HTML")
 
     # -- Add the Content-Length
     header += f"Content-Length: {len(body)}\n"

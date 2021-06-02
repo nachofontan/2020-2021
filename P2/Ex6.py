@@ -16,7 +16,7 @@ PORT = 12000
 # -- Create a client object
 c = Client(IP, PORT)
 s = Seq()
-s.read_fasta("FRAT.txt")
+s.read_fasta("FRAT1.txt")
 count = 0
 for i in range (0, len(s.strbases), 10 ):
     fragment = s.strbases[i:i + 10]

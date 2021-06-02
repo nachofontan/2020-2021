@@ -14,7 +14,7 @@ c = Client(IP, PORT)
 c_2 = Client(IP, PORT_2)
 
 s = Seq()
-s.read_fasta('../P0/FRAT.txt')
+s.read_fasta('../P0/FRAT1.txt')
 i = 0
 count = 0
 while i < len(s.strbases) and count < 10:

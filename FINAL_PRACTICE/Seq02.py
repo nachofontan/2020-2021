@@ -50,15 +50,12 @@ class Seq:
         return a, c, g, t
 
     def count(self):
-        a, c, g, t, = self.count_bases()
-        return {"A": a,"C": c, "G":g, "T": t}
-    #def count(self):
-        #bases = ["A", "C", "T", "G"]
-        #count_bases = []
-        #for base in bases:
-            #count_bases.append(self.count_bases())
-        #dictionary = dict(zip(bases, count_bases))
-        #return dictionary
+        bases = ["A", "C", "T", "G"]
+        count_bases = []
+        for base in bases:
+            count_bases.append(self.count_base(base))
+        dictionary = dict(zip(bases, count_bases))
+        return dictionary
 
     #def percentage(self):
         #a, c, g, t = self.count()
@@ -112,10 +109,6 @@ class Seq:
         body = (file_lines[1:])
         self.strbases = ''.join(body)
         return self
-    @staticmethod
-    def frequent_base(dict_count):
-        return max(dict_count, key=dict_count.get)
-
 
     def frequency(self):
         a, c, g, t = 0, 0, 0, 0

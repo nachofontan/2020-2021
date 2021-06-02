@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Karyotype</title>
+    </head>
+    <body style="background-color: cornflowerblue;" >
+    <h1>The karyotype of the {{context.specie_name}}</h1>
+    <p></p>
+    <h1>The names of the chromosomes are:</h1>
+    <br>
+    {% for n in context.species_karyotype %}
+        <p>{{n}}</p>
+    {% endfor %}
+    <p></p>
+
+
+        <a href="/">Main page</a>
+    </body>
+</html>

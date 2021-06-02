@@ -68,14 +68,14 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 context["letter"] = base
                 contents = read_template_html_file("./html/info/general.html").render(base_information=context)
             except KeyError:
-                if self.path.endswith(".html"):
+                if self.path.endswith(".HTML"):
                     try:
-                        contents = read_html_file("./html" + self.path)
+                        contents = read_html_file("./HTML" + self.path)
                     except FileNotFoundError:
                         contents = read_html_file("./html/error.html")
-        elif self.path.endswith(".html"):
+        elif self.path.endswith(".HTML"):
             try:
-                contents = read_html_file("./html" + self.path)
+                contents = read_html_file("./HTML" + self.path)
             except FileNotFoundError:
                 contents = read_html_file("./html/error.html")
         else:
@@ -85,7 +85,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         self.send_response(200)  # -- Status line: OK!
 
         # Define the content-type header:
-        self.send_header('Content-Type', 'text/html')
+        self.send_header('Content-Type', 'text/HTML')
         self.send_header('Content-Length', len(contents.encode()))
 
         # The header is finished

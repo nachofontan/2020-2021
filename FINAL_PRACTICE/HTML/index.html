@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Genome server</title>
+  </head>
+  <body style="background-color: yellow;">
+     <h1>Browsing Human and Vertebrates genome</h1>
+     <h1>BASIC LEVEL</h1>
+  <p>1) List of species in the genome data base</p>
+    <hr>
+        <form action="listSpecies" method="get">
+            Limit: <input type="text" name="limit">
+          <p></p>
+          <input type="submit" value="Send">
+        </form>
+  <hr>
+    <p>2) Information about the karyotipe</p>
+    <hr>
+        <form action="karyotype" method="get">
+              Select the species: <input type="text" name="karyotype">
+          <p></p>
+          <input type="submit" value="send">
+        </form>
+  <hr>
+    <p>3) Chromosome length</p>
+    <hr>
+         <form action="chromosomeLength" method="get">
+              Select the species: <input type="text" name="specie">
+          <p></p>
+              Select the chromosome: <input type="text" name="number">
+          <p></p>
+           <input type="submit" value="send">
+         </form>
+
+  </body>
+</html>
+<title>Medium level</title>
+  </head>
+  <body style="background-color: yellow;">
+     <h1>MEDIUM LEVEL</h1>
+  <p>1) Sequence of a human being</p>
+         <form action="geneSeq" method="get">
+               Get a gene. Select the name:
+               <select name="gene">
+                  {% for n in context.human_genes %}
+                    <option value="{{n}}">{{n}}</option>
+                  {% endfor %}
+               </select>
+                   <input type="submit" value="GET THE SEQUENCE">
+
+         </form>
+  <p>2) Information obout a human gene</p>
+         <form action="geneInfo" method="get">
+               Get a gene. Select the name:
+               <select name="gene">
+                  {% for n in context.human_genes %}
+                    <option value="{{n}}">{{n}}</option>
+                  {% endfor %}
+               </select>
+                   <input type="submit" value="GET THE INFO">
+
+         </form>
+  <p>3) Calculations obout a human gene</p>
+         <form action="geneCalc" method="get">
+               Get a gene. Select the name:
+               <select name="gene">
+                  {% for n in context.human_genes %}
+                    <option value="{{n}}">{{n}}</option>
+                  {% endfor %}
+               </select>
+               Select operation:
+                   <input type="radio" name="calculation" value="length">length
+                   <input type="radio" name="calculation" value="percentage">percentage
+               <br>
+               <input type="submit" value="OPERATE!!">
+         </form>
+
+
+  </body>
+</html>

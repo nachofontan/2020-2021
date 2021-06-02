@@ -1,6 +1,6 @@
 import http.client
 import json
-import Seq02
+from Seq02 import Seq
 
 def print_colored(message, data, color):
     from termcolor import cprint, colored
@@ -32,10 +32,10 @@ try:
         if response.status == 200:
             response_dict = json.loads(response.read().decode())
             #response = json.dumps(response_dict, indent=4, sort_keys=True
-            sequence = Seq02.Seq(response_dict["seq"])
+            sequence = Seq(response_dict["seq"])
             s_length = sequence.len()
-            percentages = sequence.percentage_base_and_count()
-            most_frequent_base = sequence.frequency_base()
+            percentages = sequence.percentage()
+            most_frequent_base = sequence.frequent_base(sequence.count())
             print_colored("Gene: ", key, "yellow")
             print_colored("Description: ", response_dict['desc'], "yellow")
             print_colored("Total length: ", s_length, "yellow")
